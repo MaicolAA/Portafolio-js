@@ -1,0 +1,68 @@
+Consultas para Base de datos de Banco
+SELECT DISTINCT b1.branch_name
+FROM branch b1
+WHERE b1.assets > (SELECT MAX(b2.assets) FROM branch b2 WHERE b2.branch_city = 'Brooklyn');
+
+EXPLICACION DE LA CONSULTA Y SUBCONSULTA
+
+//SELECT DISTINCT b1.branch_name: Esta parte de la consulta selecciona todos los nombres de sucursales (branch_name) de la tabla branch. El uso de DISTINCT asegura que no se devuelvan nombres duplicados en el resultado.
+
+FROM branch b1: La consulta se realiza en la tabla branch y se le da el alias b1 para facilitar la referencia en la consulta.
+
+WHERE b1.assets > (SELECT MAX(b2.assets) FROM branch b2 WHERE b2.branch_city = 'Brooklyn'): Esta es la condición principal de la consulta. Aquí se compara el activo (assets) de cada sucursal (b1) con el activo máximo de todas las sucursales en la ciudad de Brooklyn.
+
+La subconsulta (SELECT MAX(b2.assets) FROM branch b2 WHERE b2.branch_city = 'Brooklyn') se encarga de encontrar el activo máximo de todas las sucursales en Brooklyn. Esto se hace seleccionando el valor máximo de la columna assets en la tabla branch donde branch_city es igual a 'Brooklyn'.
+
+Luego, la condición b1.assets > verifica si el activo de la sucursal actual (representada por b1) es mayor que el activo máximo encontrado en la subconsulta.
+
+-----------------------------------------------------------------------
+
+SEGUN CHATGPT la siguiente es la que da la qie tiene el mayor saldo promedio que porque son independientes y tienen proposito diferente
+
+SELECT branch_name
+FROM (
+    SELECT branch_name, AVG(balance) AS avg_balance
+    FROM account
+    GROUP BY branch_name
+    ORDER BY avg_balance DESC
+    LIMIT 1
+) AS subquery;
+
+
+------------------------------------------------------------------------
+
+Nortwick
+
+- select * from orders where customer_id in (
+ select customer_id from customers
+ where location = 'México D.F.' ); 
+
+- SELECT * FROM orders WHERE EXISTS (
+  SELECT 1 FROM order_details od
+  JOIN products p ON od.product_id = p.product_id
+  WHERE od.order_id = o.order_id
+  AND p.category = 'Condiments' );
+
+- SELECT * FROM products
+WHERE category = 'Seafood'
+AND unit_price BETWEEN 10 AND 20;
+
+------------------------------------------------------------------------
+
+University
+
+- SELECT c.course_name
+FROM courses c
+JOIN instructors i ON c.instructor_id = i.instructor_id
+WHERE i.department = 'Accounting';
+
+- SELECT c.course_name
+FROM courses c
+JOIN enrollments e ON c.course_id = e.course_id
+JOIN students s ON e.student_id = s.student_id
+WHERE s.age > 44;
+
+- SELECT p.prerequisite_course_id
+FROM prerequisites p
+JOIN courses c ON p.course_id = c.course_id
+WHERE c.department = 'Historia' AND c.credits = 3;
